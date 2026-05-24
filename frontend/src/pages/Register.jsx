@@ -24,14 +24,16 @@ const Register = () => {
     if (errors[e.target.name]) setErrors({ ...errors, [e.target.name]: '' });
   };
 
-  const validate = () => {
-    const errs = {};
-    if (!form.username || form.username.length < 3) errs.username = 'Username must be at least 3 characters';
-    if (!/^[a-zA-Z0-9_]+$/.test(form.username)) errs.username = 'Only letters, numbers, and underscores';
-    if (!form.email) errs.email = 'Email is required';
-    if (!form.password || form.password.length < 6) errs.password = 'Password must be at least 6 characters';
-    return errs;
-  };
+  // AFTER
+const validate = () => {
+  const errs = {};
+  if (!form.username || form.username.length < 3) errs.username = 'Username must be at least 3 characters';
+  if (!/^[a-zA-Z0-9_]+$/.test(form.username)) errs.username = 'Only letters, numbers, and underscores';
+  if (!form.email) errs.email = 'Email is required';
+  if (!form.password || form.password.length < 6) errs.password = 'Password must be at least 6 characters';
+  if (!form.codeforcesHandle.trim()) errs.codeforcesHandle = 'Codeforces handle is required';
+  return errs;
+};
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -114,7 +116,7 @@ const Register = () => {
               </button>
             </div>
             <Input
-              label={<span>Codeforces Handle <span className="text-gray-500 font-normal">(optional)</span></span>}
+              label="Codeforces Handle"
               name="codeforcesHandle"
               placeholder="tourist"
               value={form.codeforcesHandle}

@@ -85,8 +85,8 @@ const Battle = () => {
       return;
     }
     setLoading(true);
-    emit('create_invite', { difficulty });
     setMode('invite_create');
+    emit('create_invite', { difficulty });
   };
 
   const handleJoinInvite = () => {

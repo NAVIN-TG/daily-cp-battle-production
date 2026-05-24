@@ -50,12 +50,6 @@ const FEATURES = [
   },
 ];
 
-const STATS = [
-  { label: 'Active Battles', value: '1,200+', icon: Swords },
-  { label: 'Users', value: '4,500+', icon: Users },
-  { label: 'Problems Solved', value: '28,000+', icon: Code2 },
-  { label: 'Rating Points Given', value: '2M+', icon: TrendingUp },
-];
 
 const Landing = () => {
   const { user } = useAuth();
@@ -129,21 +123,6 @@ const Landing = () => {
                 </Link>
               </>
             )}
-          </div>
-        </div>
-      </section>
-
-      {/* ── Stats ────────────────────────────────────────────────────────── */}
-      <section className="py-12 px-4">
-        <div className="max-w-5xl mx-auto">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {STATS.map(({ label, value, icon: Icon }) => (
-              <div key={label} className="glass p-5 text-center">
-                <Icon className="w-5 h-5 text-brand-400 mx-auto mb-2" />
-                <p className="font-display font-bold text-2xl text-white">{value}</p>
-                <p className="text-xs text-gray-500 mt-1">{label}</p>
-              </div>
-            ))}
           </div>
         </div>
       </section>

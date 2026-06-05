@@ -91,14 +91,44 @@ initSocketHandlers(io);
 
 // ─── DATABASE ─────────────────────────────────────────────────────────────────
 const connectDB = async () => {
-  try {
-    await mongoose.connect(process.env.MONGODB_URI, {
-      serverSelectionTimeoutMS: 5000,
-    });
-    console.log('✅ MongoDB connected');
-  } catch (err) {
-    console.error('❌ MongoDB connection error:', err.message);
-    process.exit(1);
+  const isProduction = process.env.NODE_ENV === 'production';
+  const mongoUri = process.env.MONGODB_URI;
+
+  if (!isProduction) {
+    try {
+      console.log('⏳ Connecting to MongoDB Atlas...');
+      await mongoose.connect(mongoUri, {
+        serverSelectionTimeoutMS: 3000,
+      });
+      console.log('✅ MongoDB connected to Atlas');
+    } catch (err) {
+      console.warn('⚠️ MongoDB Atlas connection failed:', err.message);
+      console.log('🚀 Starting local in-memory MongoDB server fallback...');
+      try {
+        process.env.MONGOMS_DOWNLOAD_DIR = require('path').join(__dirname, '.mongodb-binaries');
+        const { MongoMemoryServer } = require('mongodb-memory-server');
+        const mongoServer = await MongoMemoryServer.create();
+        const localUri = mongoServer.getUri();
+        await mongoose.connect(localUri);
+        console.log('✅ Local In-Memory MongoDB connected at:', localUri);
+      } catch (memErr) {
+        console.error('❌ Failed to start local in-memory MongoDB:', memErr.message);
+        process.exit(1);
+      }
+    }
+  } else {
+    try {
+      if (!mongoUri) {
+        throw new Error('MONGODB_URI environment variable is not defined');
+      }
+      await mongoose.connect(mongoUri, {
+        serverSelectionTimeoutMS: 5000,
+      });
+      console.log('✅ MongoDB connected');
+    } catch (err) {
+      console.error('❌ MongoDB connection error:', err.message);
+      process.exit(1);
+    }
   }
 };
 
